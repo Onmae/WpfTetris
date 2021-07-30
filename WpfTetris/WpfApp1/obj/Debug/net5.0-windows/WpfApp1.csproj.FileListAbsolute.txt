@@ -21,3 +21,6 @@ D:\손승우\WpfTetris\WpfTetris\WpfApp1\obj\Debug\net5.0-windows\ref\WpfApp1.dl
 D:\손승우\WpfTetris\WpfTetris\WpfApp1\obj\Debug\net5.0-windows\WpfApp1.pdb
 D:\손승우\WpfTetris\WpfTetris\WpfApp1\obj\Debug\net5.0-windows\WpfApp1.genruntimeconfig.cache
 D:\손승우\WpfTetris\WpfTetris\WpfApp1\obj\Debug\net5.0-windows\GeneratedInternalTypeHelper.g.cs
+D:\손승우\WpfTetris\WpfTetris\WpfApp1\bin\Debug\net5.0-windows\TetrisEngine.dll
+D:\손승우\WpfTetris\WpfTetris\WpfApp1\bin\Debug\net5.0-windows\TetrisEngine.pdb
+D:\손승우\WpfTetris\WpfTetris\WpfApp1\obj\Debug\net5.0-windows\WpfApp1.csproj.CopyComplete

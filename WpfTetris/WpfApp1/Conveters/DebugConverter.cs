@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace WpfApp1.Conveters
+namespace MyTeiris.Conveters
 {
     public class DebugConverter : IValueConverter
     {

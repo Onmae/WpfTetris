@@ -6,9 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Media;
-using WpfApp1.Models;
+using MyTeiris.Models;
 
-namespace WpfApp1.Conveters
+namespace MyTeiris.Conveters
 {
     class IntToColor : IValueConverter
     {
@@ -38,6 +38,8 @@ namespace WpfApp1.Conveters
                     return new SolidColorBrush(Colors.Magenta);
                 case Constants.block_7:
                     return new SolidColorBrush(Colors.DeepPink);
+                case Constants.gameover:
+                    return new SolidColorBrush(Colors.Red);
             }
             return new SolidColorBrush(Colors.Gray);
         }

@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31410.357
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfApp1", "WpfApp1\WpfApp1.csproj", "{5E72B05E-583F-4945-8091-FCF71D45843C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfApp1", "WpfApp1\WpfApp1.csproj", "{5E72B05E-583F-4945-8091-FCF71D45843C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TetrisEngine", "TetrisEngine\TetrisEngine.csproj", "{5E9700FB-CB3A-40A9-B8AB-13565F334384}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{5E72B05E-583F-4945-8091-FCF71D45843C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5E72B05E-583F-4945-8091-FCF71D45843C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5E72B05E-583F-4945-8091-FCF71D45843C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E9700FB-CB3A-40A9-B8AB-13565F334384}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E9700FB-CB3A-40A9-B8AB-13565F334384}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E9700FB-CB3A-40A9-B8AB-13565F334384}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E9700FB-CB3A-40A9-B8AB-13565F334384}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

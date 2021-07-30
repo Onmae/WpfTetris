@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WpfApp1.Models
+namespace MyTeiris.Models
 {
     class Constants
     {
@@ -17,6 +17,7 @@ namespace WpfApp1.Models
         public const int block_5 = 5;
         public const int block_6 = 6;
         public const int block_7 = 7;
+        public const int gameover = 8;
 
         public const int MOVE_RIGHT = 1;
         public const int MOVE_LEFT = 2;

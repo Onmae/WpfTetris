@@ -1,11 +1,33 @@
 {
   "version": 3,
   "targets": {
-    "net5.0-windows7.0": {}
+    "net5.0-windows7.0": {
+      "TetrisEngine/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v5.0",
+        "compile": {
+          "bin/placeholder/TetrisEngine.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/TetrisEngine.dll": {}
+        },
+        "frameworkReferences": [
+          "Microsoft.WindowsDesktop.App.WPF"
+        ]
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "TetrisEngine/1.0.0": {
+      "type": "project",
+      "path": "../TetrisEngine/TetrisEngine.csproj",
+      "msbuildProject": "../TetrisEngine/TetrisEngine.csproj"
+    }
+  },
   "projectFileDependencyGroups": {
-    "net5.0-windows7.0": []
+    "net5.0-windows7.0": [
+      "TetrisEngine >= 1.0.0"
+    ]
   },
   "packageFolders": {
     "C:\\Users\\BEAN\\.nuget\\packages\\": {},
@@ -38,7 +60,11 @@
       "frameworks": {
         "net5.0-windows7.0": {
           "targetAlias": "net5.0-windows",
-          "projectReferences": {}
+          "projectReferences": {
+            "D:\\손승우\\WpfTetris\\WpfTetris\\TetrisEngine\\TetrisEngine.csproj": {
+              "projectPath": "D:\\손승우\\WpfTetris\\WpfTetris\\TetrisEngine\\TetrisEngine.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

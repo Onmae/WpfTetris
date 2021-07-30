@@ -12,9 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using WpfApp1.ViewModels;
+using MyTeiris.ViewModels;
 
-namespace WpfApp1.Views
+namespace MyTeiris.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -54,6 +54,11 @@ namespace WpfApp1.Views
                     vm.MoveRotate();
                     break;
             }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            ((MainWindowViewModel)DataContext).pauseGame();
         }
     }
 }

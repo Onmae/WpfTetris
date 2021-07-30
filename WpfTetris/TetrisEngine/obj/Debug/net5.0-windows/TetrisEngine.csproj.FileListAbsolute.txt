@@ -1,0 +1,12 @@
+D:\손승우\WpfTetris\WpfTetris\TetrisEngine\bin\Debug\net5.0-windows\TetrisEngine.deps.json
+D:\손승우\WpfTetris\WpfTetris\TetrisEngine\bin\Debug\net5.0-windows\TetrisEngine.dll
+D:\손승우\WpfTetris\WpfTetris\TetrisEngine\bin\Debug\net5.0-windows\ref\TetrisEngine.dll
+D:\손승우\WpfTetris\WpfTetris\TetrisEngine\bin\Debug\net5.0-windows\TetrisEngine.pdb
+D:\손승우\WpfTetris\WpfTetris\TetrisEngine\obj\Debug\net5.0-windows\TetrisEngine.GeneratedMSBuildEditorConfig.editorconfig
+D:\손승우\WpfTetris\WpfTetris\TetrisEngine\obj\Debug\net5.0-windows\TetrisEngine.AssemblyInfoInputs.cache
+D:\손승우\WpfTetris\WpfTetris\TetrisEngine\obj\Debug\net5.0-windows\TetrisEngine.AssemblyInfo.cs
+D:\손승우\WpfTetris\WpfTetris\TetrisEngine\obj\Debug\net5.0-windows\TetrisEngine.csproj.CoreCompileInputs.cache
+D:\손승우\WpfTetris\WpfTetris\TetrisEngine\obj\Debug\net5.0-windows\TetrisEngine.dll
+D:\손승우\WpfTetris\WpfTetris\TetrisEngine\obj\Debug\net5.0-windows\ref\TetrisEngine.dll
+D:\손승우\WpfTetris\WpfTetris\TetrisEngine\obj\Debug\net5.0-windows\TetrisEngine.pdb
+D:\손승우\WpfTetris\WpfTetris\TetrisEngine\obj\Debug\net5.0-windows\TetrisEngine.csproj.AssemblyReference.cache

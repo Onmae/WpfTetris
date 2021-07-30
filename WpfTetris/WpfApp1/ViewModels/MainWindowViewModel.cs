@@ -1,46 +1,41 @@
-﻿using System;
+﻿using MyTeiris.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Data;
-using WpfApp1.Models;
+using TetrisEngine;
 
-namespace WpfApp1.ViewModels
+namespace MyTeiris.ViewModels
 {
     public class MainWindowViewModel : INotifyPropertyChanged
     {
 
-        const int MAIN_ROWS = 21;
-        const int MAIN_COLS = 12;
+
+        public const int MAIN_ROWS = 21;
+        public const int MAIN_COLS = 12;
 
         Block mainBlock = null;
         Block nextBlock = null;
 
-        int[,] boardMatrix = new int[MAIN_ROWS, MAIN_COLS];
+        Move move = new();
 
-        int ScoreLine;
-        int ScoreHighLine;
+        Matrix matrix = new Matrix(MAIN_ROWS,MAIN_COLS);
+
+        int scoreLine;
+        int scoreHighLine;
 
         public bool isPlaying = false;
 
-
         System.Windows.Threading.DispatcherTimer dispatcherTimer;
 
-        int[,] MATRIX = new int[MAIN_ROWS + 1, MAIN_COLS + 2];
-
         BindableTwoDArray<int> nextPan = new BindableTwoDArray<int>(4, 4);
-        BindableTwoDArray<int> blockPan = new BindableTwoDArray<int>(MAIN_ROWS+1, MAIN_COLS+2);
-        List<int> filled = new List<int>();
+        BindableTwoDArray<int> blockPan = new BindableTwoDArray<int>(MAIN_ROWS, MAIN_COLS);
 
-        public int ScoreLine1 { get => ScoreLine; set => ScoreLine = value; }
-
-
-
-        public int ScoreHighLine1 { get => ScoreHighLine; set => ScoreHighLine = value; }
         public BindableTwoDArray<int> NextPan { get => nextPan; set => nextPan = value; }
         public BindableTwoDArray<int> BlockPan { get => blockPan; set => blockPan = value; }
+        public int ScoreLine { get => scoreLine; set { scoreLine = value; NotifyPropertyChanged("ScoreLine"); } }
+        public int ScoreHighLine { get => scoreHighLine; set => scoreHighLine = value; }
 
         public MainWindowViewModel()
         {
@@ -62,6 +57,7 @@ namespace WpfApp1.ViewModels
                 gameover();
             }
         }
+
         private void StartTimer()
         {
 
@@ -78,12 +74,13 @@ namespace WpfApp1.ViewModels
         {
             if (isPlaying)
             {
-                if (!ValidMove(ref mainBlock, 1, 0))
+                if (!move.ValidMove(ref mainBlock, 1, 0,ref matrix))
                 {
                     AfterMove();
                 }
-                DrawBoard();
-                DrawBlock(mainBlock);
+
+
+                redraw();
             }
             else
             {
@@ -91,79 +88,79 @@ namespace WpfApp1.ViewModels
             }
         }
 
-        private void AfterMove()
+        public void AfterMove()
         {
-            stackBlock(mainBlock);
-            isFilledLine();
+            matrix.stackBlock(mainBlock);
+            matrix.isFilledLine();
 
-            getNextBlock();
-
-        }
-
-        private void deleteLine()
-        {
-
-        }
-
-        private void isFilledLine()
-        {
-            for(int i=0; i< MATRIX.GetLength(0); i++)
+            if (matrix.Filled.Count > 0)
             {
-                bool isFill = true;
-                for(int j=0; j< MATRIX.GetLength(1); j++)
-                {
-                    if(MATRIX[i,j] <= 0)
-                    {
-                        isFill = false;
-                    }
+                ScoreLine += matrix.deleteLine();
 
-                    if(isFill == true)
-                    {
-                        filled.Add(j);
-                    }
+            }
+
+            if (matrix.Filled.Count == 0)
+            {
+                Block cloneNextBlock = nextBlock.Clone();
+                cloneNextBlock.Y = 4;
+                if (move.ValidCheck(ref cloneNextBlock, ref matrix))
+                {
+                    getNextBlock();
+                }
+                else
+                {
+                    gameover();
                 }
             }
+
+
+
         }
 
-        private void stackBlock(Block block)
+        public void pauseGame()
         {
-                for (int i = 0; i < block.Shape.GetLength(0); i++)
+
+        }
+
+        private async void gameover()
+        {
+            await Task.Run(() =>
+            {
+                StopTimer();
+                isPlaying = false;
+                for (int i = MAIN_ROWS - 1; i >= 0; i--)
                 {
-                    for (int j = 0; j < block.Shape.GetLength(1); j++)
+                    for (int j = 0; j < MAIN_COLS; j++)
                     {
-                        if (block.Shape[i, j] > 0)
-                        {
-                            MATRIX[i+block.X,j+block.Y] = block.Shape[i, j];
-                        }
+                        matrix.Array[i][j] = 8;
                     }
+                    DrawBoard();
+                    Thread.Sleep(100);
                 }
-        }
-
-        private void gameover()
-        {
-            throw new NotImplementedException();
+            });
         }
 
         private void initGame()
         {
+            matrix.resetMatrix();
+            ScoreLine = 0;
             getNextBlock();
-            DrawBoard();
-            DrawBlock(mainBlock);
+            redraw();
         }
-        private void DrawBlock(Block block)
-        {
-            for(int i=0; i<block.Shape.GetLength(0); i++)
-            {
-                for(int j=0; j<block.Shape.GetLength(1); j++)
-                {
-                    if(block.Shape[i,j] > 0)
-                    {
 
-                        blockPan[i + block.X, j + block.Y] = block.Shape[i, j];
+        private void DrawBlock(Block block, BindableTwoDArray<int> pan)
+        {
+            for (int i = 0; i < block.Shape.GetLength(0); i++)
+            {
+                for (int j = 0; j < block.Shape.GetLength(1); j++)
+                {
+                    if (block.Shape[i, j] > 0)
+                    {
+                        pan[i + block.X, j + block.Y] = block.Shape[i, j];
                     }
                 }
             }
-            blockPan.NotifyBlockChange();
+            pan.NotifyBlockChange();
         }
 
         private void DrawBoard()
@@ -176,187 +173,36 @@ namespace WpfApp1.ViewModels
                     if (j == 0 || j == 11 || i == 20)
                     {
                         blockPan[i, j] = Constants.blockWall;
+                        matrix.Array[i][j] = -1;
                     }
                     else
                     {
                         blockPan[i, j] = Constants.blockBackground;
-                        if (MATRIX[i,j] > 0) {
-                            blockPan[i, j] = MATRIX[i, j];
-            }
+                        if (matrix.Array[i][j] > 0)
+                        {
+                            blockPan[i, j] = matrix.Array[i][j];
+                        }
 
                     }
                 }
             }
+
+            for (int i = 0; i < 4; i++)
+            {
+                for (int j = 0; j < 4; j++)
+                {
+                    nextPan[i, j] = 0;
+                }
+            }
+            nextPan.NotifyBlockChange();
             blockPan.NotifyBlockChange();
         }
 
-
-        public void move(ref Block block, int x, int y)
+        public void redraw()
         {
-            block.X += x;
-            block.Y += y;
-        }
-
-        public void rotate(ref Block block)
-        {
-            for(int i=0; i<block.Shape.GetLength(0); i++)
-            {
-                for(int j=0; j<i; j++)
-                {
-                    int temp = block.Shape[j, i];
-                    block.Shape[j, i] = block.Shape[i, j];
-                    block.Shape[i, j] = temp;
-                }
-            }
-
-            for(int i=0; i<block.Shape.GetLength(0); i++)
-            {
-                for(int j=0; j <= block.Shape.GetLength(1)/2; j++)
-                {
-                    int temp = block.Shape[i, j];
-                    block.Shape[i, j] = block.Shape[i, block.Shape.GetLength(1) -j -1];
-                    block.Shape[i, block.Shape.GetLength(1) - j -1] = temp;
-
-                }
-            }
-
-        }
-
-
-        public bool ValidMove(ref Block block,int x,int y)
-        {
-            Block copyBlock = (Block)block.Clone();
-            move(ref copyBlock, x, y);
-            if (ValidCheck(ref copyBlock))
-            {
-                move(ref block, x, y);
-                DrawBoard();
-                DrawBlock(block);
-                return true;
-            }else
-            {
-                return false;
-            }
-
-        }
-
-        public bool ValidCheck(ref Block block)
-        {
-            bool isValid = true;
-
-            for(int i=0; i<block.Shape.GetLength(0); i++)
-            {
-                for(int j=0; j< block.Shape.GetLength(1); j++)
-                {
-                    if(block.Shape[i,j] > 0) {
-                        if(block.X+i < 0 || block.Y+j < 1 ||
-                            block.X+i > MAIN_ROWS-2 || block.Y+j >= MAIN_COLS - 1 ||
-                            MATRIX[block.X+i,block.Y+j] > 0)
-                        {
-                            isValid = false;
-                        }
-                    }
-                }
-            }
-            return isValid;
-        }
-
-        public bool ValidRotate(ref Block block)
-        {
-            Block copyBlock = (Block)block.Clone();
-            rotate(ref copyBlock);
-            if (ValidCheck(ref copyBlock))
-            {
-                rotate(ref block);
-                DrawBoard();
-                DrawBlock(block);
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-
-        }
-
-        internal void MoveLeft()
-        {
-            ValidMove(ref mainBlock, 0, -1);
-        }
-
-        internal void MoveRight()
-        {
-            ValidMove(ref mainBlock, 0, 1);
-        }
-
-        internal void MoveDrop()
-        {
-            while(ValidMove(ref mainBlock, 1, 0));
-            AfterMove();
             DrawBoard();
-            DrawBlock(mainBlock);
-        }
-
-        internal void MoveDown()
-        {
-            ValidMove(ref mainBlock, 1, 0);
-        }
-
-        internal void MoveRotate()
-        {
-            ValidRotate(ref mainBlock);
-        }
-
-        public static int[,] RandomBlock()
-        {
-            int[][,] tetrisBlock = new int[][,]
-            {
-                new int[,]{{0,1,1},{1,1,0},{0,0,0} },
-                new int[,]{{2,0,0},{2,2,2},{0,0,0} },
-                new int[,]{{0,3,0},{3,3,3},{0,0,0} },
-                new int[,]{{0,0,4,0},{0,0,4,0 },{0,0,4,0 },{0,0,4,0} },
-                new int[,]{{5,5 },{5,5 } },
-                new int[,]{{0,0,6},{6,6,6 },{0,0,0, } },
-                new int[,]{{7,7,0},{0,7,7 },{0,0,0 } }
-            };
-
-            return tetrisBlock[new Random().Next(0, 7)];
-        }
-
-        public class Block : INotifyPropertyChanged, ICloneable
-        {
-            int x=0;
-            int y=0;
-            int[,] shape = RandomBlock();
-
-            public int X { get => x; set => x = value; }
-            public int Y { get => y; set => y = value; }
-            public int[,] Shape { get => shape; set => shape = value; }
-
-            public object Clone()
-            {
-                Block block = new Block();
-                block.x = this.x;
-                block.y = this.y;
-                block.shape = this.shape;
-
-                return block;
-
-            }
-
-            public event PropertyChangedEventHandler PropertyChanged;
-
-            public void Notify() => NotifyPropertyChanged(Binding.IndexerName);
-
-            private void NotifyPropertyChanged(string propertyName)
-            {
-                if (this.PropertyChanged != null)
-                {
-                    this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-                }
-            }
-
-
+            DrawBlock(mainBlock, blockPan);
+            DrawBlock(nextBlock, nextPan);
         }
 
         public void getNextBlock()
@@ -364,6 +210,50 @@ namespace WpfApp1.ViewModels
             mainBlock = nextBlock ?? new Block();
             mainBlock.Y = 4;
             nextBlock = new Block();
+            nextBlock.Y = 1;
+            nextBlock.X = 1;
+            if (nextBlock.Shape[1, 1] == 5)
+                nextBlock.X = 1;
+            if (nextBlock.Shape[1, 1] == 4)
+            {
+                nextBlock.X = 0;
+                nextBlock.Y = 0;
+            }
+        }
+
+        internal void MoveLeft()
+        {
+            move.ValidMove(ref mainBlock, 0, -1, ref matrix);
+            redraw();
+        }
+
+        internal void MoveRight()
+        {
+            move.ValidMove(ref mainBlock, 0, 1, ref matrix);
+            redraw();
+        }
+
+        internal void MoveDrop()
+        {
+            while (move.ValidMove(ref mainBlock, 1, 0, ref matrix)) ;
+            AfterMove();
+            StopTimer();
+            StartTimer();
+            redraw();
+        }
+
+        internal void MoveDown()
+        {
+            move.ValidMove(ref mainBlock, 1, 0, ref matrix);
+            StopTimer();
+            StartTimer();
+            redraw();
+        }
+
+        internal void MoveRotate()
+        {
+            move.ValidRotate(ref mainBlock,ref matrix); ;
+            redraw();
         }
 
         #region notifyproperty
